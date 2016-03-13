@@ -8,8 +8,9 @@ days=c("01","02","03","04","05","06","07","08","09",as.character(10:31))
 november <- paste(2015,"11",days[1:30],sep = "-")
 december <- paste(2015,"12",days[1:31],sep = "-")
 january = paste(2016,"01",days[1:31],sep = "-")
-february = paste(2016,"02",days[1:20],sep = "-")
-february
+february = paste(2016,"02",days[1:29],sep = "-")
+march <-  paste(2016,"03",days[1:13],sep = "-")
+
 
 
 
@@ -69,7 +70,12 @@ fund <- placeOrders(fund,
 
 fund
 
-equity <- equityOverPeriod(fund,c(november,december,february))
+period <- c(november,
+            december,
+            january,
+            february,
+            march)
+equity <- equityOverPeriod(fund,period)
 equity
 
 equity.norm <- equity / equity[1]
@@ -78,8 +84,16 @@ benchmark.norm <- benchmark / benchmark[1]
 df <- data.frame(equity=equity.norm,benchmark=benchmark.norm)
 
 df
-plot(equity.norm,t='l',ylim = c(0.8,1.15),col="blue")
+plot(equity.norm,t='l',ylim = c(0.8,1.15),col="blue", xaxt="n")
 lines(benchmark.norm,col="red")
+L <- round(length(equity) / 10)
+axis(side=1,labels = period[1:10 * L], at=1:10 * L)
+
+legend("topleft",
+       c("fund","benchmark:SPY"),
+       lty=1,
+       col=c("blue","red"))
+
 
 eq.ret <- getReturns(equity)
 eq.ret

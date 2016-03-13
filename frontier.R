@@ -50,7 +50,7 @@ bestPortfolio <- function(portfolios,expected=0.01){
   return (w)
 }
 
-
+#example, see portfolio1 for full example
 days=252
 x1=rnorm(days,0.01,0.01)
 x2=rnorm(days,0.02,0.05)

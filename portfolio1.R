@@ -1,3 +1,6 @@
+#example of use of frontier.R
+#this script takes symbols and find the efficient frontier
+#it merges all trading dates using mergeSecurities function
 
 symbols <- c("IAU","FB","T","BTCUSD","MA","AMZN")
 n=90
