@@ -172,5 +172,61 @@ priceAtDate <- function(date,symbol){
 
 pricesAtDate <- Vectorize(priceAtDate,"symbol")
 
+placeOrders <- function(fund,symbols,date,values){
+  p <- pricesAtDate(date,symbols)
+  p
+  qtys = values / p
+  
+  newsymbols <- symbols[!symbols %in% names(fund)]
+  actualRows <- nrow(fund)
+  m <- matrix(0,actualRows,length(newsymbols))
+  m <- as.data.frame(m)
+  names(m) <- newsymbols
+  
+  fund <- cbind(fund,m)
+  
+  N <-  nrow(fund)
+  fund <- rbind(fund,fund[N,])
+  fund[N+1,"Date"] <- date
+  fund[N+1,symbols] <- fund[N,symbols]+qtys
+  fund[N+1,"cash"] <- fund[N+1,"cash"] - sum(values)
+  fund
+}
 
+sell <- function(fund,date,symbol,qty=-1){
+  
+  if(qty == -1){#sell all
+    qty = tail(fund[symbol],1)
+  }
+  p <- priceAtDate(date,c(symbol))
+  val <- qty * p
+  f <- placeOrders(fund,c(symbol),date,-val)
+  f
+}
 
+buy <- function(fund,date,symbol,qty){
+  p <- priceAtDate(date,c(symbol))
+  val <- qty * p
+  f <- placeOrders(fund,c(symbol),date,val)
+  f
+}
+
+equityByDate <- function(fund,date){
+  
+  df <- fund[fund$Date<=date,]
+  df
+  N <- nrow(df)
+  Qty <- df[N,2:5]
+  Qty <- data.matrix(Qty)
+  
+  k <-  length(names(fund))
+  symbols <- names(fund)[c(-1,-k)] # remove all non equity symbols
+  symbols
+  Price <- pricesAtDate(date,symbols)
+  Price
+  value <- Price %*% t(Qty)
+  value <- value + df$cash[N]
+  value
+}
+
+equityOverPeriod <- Vectorize(equityByDate,"date")

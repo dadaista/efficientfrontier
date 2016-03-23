@@ -3,65 +3,20 @@
 # 0.16 0.08  0.6 0.16 0.008179422 0.00200309
 
 library(ggplot2)
-
+source("util.R")
 days=c("01","02","03","04","05","06","07","08","09",as.character(10:31))
 november <- paste(2015,"11",days[1:30],sep = "-")
 december <- paste(2015,"12",days[1:31],sep = "-")
 january = paste(2016,"01",days[1:31],sep = "-")
 february = paste(2016,"02",days[1:29],sep = "-")
-march <-  paste(2016,"03",days[1:13],sep = "-")
-
-
-
-
-placeOrders <- function(fund,symbols,date,values){
-
-  
-  p <- pricesAtDate(date,symbols)
-  p
-  qtys = values / p
-  
-  N <-  nrow(fund)
-  fund <- rbind(fund,fund[N,])
-  fund[N+1,"Date"] <- date
-  fund[N+1,symbols] <- fund[N,symbols]+qtys
-  fund[N+1,"cash"] <- fund[N+1,"cash"] - sum(values)
-  
-  fund
-}
-
-
-equityByDate <- function(fund,date){
-  
-  df <- fund[fund$Date<=date,]
-  df
-  N <- nrow(df)
-  Qty <- df[N,2:5]
-  Qty <- data.matrix(Qty)
-  
-  k <-  length(names(fund))
-  symbols <- names(fund)[c(-1,-k)] # remove all non equity symbols
-  symbols
-  Price <- pricesAtDate(date,symbols)
-  Price
-  value <- Price %*% t(Qty)
-  value <- value + df$cash[N]
-  value
-}
+march <-  paste(2016,"03",days[1:19],sep = "-")
 
 
 date = "2015-11-01"
-fund <-   data.frame(
-  Date=date,
-  IAU=0,
-  FB=0,
-  T=0,
-  BTCUSD=0,
-  cash=10000)
+fund <-   data.frame(Date = date,cash=10000)
 fund
 
 
-equityOverPeriod <- Vectorize(equityByDate,"date")
 
 fund <- placeOrders(fund,
                     c("IAU","FB","T","BTCUSD"),
@@ -69,6 +24,21 @@ fund <- placeOrders(fund,
                     c(1600,800,6000,1600))
 
 fund
+
+
+
+fund <- sell(fund,"2016-03-18","FB")
+fund
+
+fund <- sell(fund,"2016-03-18","T",75)
+fund
+
+fund <- sell(fund,"2016-03-18","BTCUSD",2.34)
+fund
+
+fund <- buy(fund,"2016-03-21","IAU",146)
+fund 
+
 
 period <- c(november,
             december,
@@ -101,3 +71,4 @@ bm.ret <- getReturns(benchmark)
 bm.ret
 Beta <- beta(eq.ret,eq.ret)
 Alpha <- alpha(tail(equity.norm,1),tail(benchmark.norm,1),Beta)
+
