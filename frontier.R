@@ -1,6 +1,6 @@
 #calculate best portfolio W in the efficient frontier
 #given risk
-#does not use formulas, but only brute force
+#does not use formulas, but only brute force ala montecarlo
 #calculate the mean and variance for all linear combinations
 # of W * X
 # returns: matrix of return time series, each row a security (n_security,days)
@@ -10,9 +10,67 @@
 
 library(matrixStats)
 
+#' simulate all possible portfolios for symbols 
+#'
+#' @param symbols 
+#' @param days 
+#' @param granularity, the lower the better but can overload memory
+#'
+#' @return a dataframe of portfolios with different weights,risk and return
+#' @export
+#'
+#' @examples
+simulatePortfolios <- function (symbols, days, granularity=0.04) {
+  returns = combinedReturns(symbols,days)
+  portfolios <- generatePortfolios(t(returns),granularity)
+  portfolios
+}
+
+#' select the best portfolio based on the expected return
+#'
+#' @param portfolios 
+#' @param expected: expected return
+#'
+#' @return
+#' @export
+#'
+#' @examples
+bestPortfolio <- function(portfolios,expected=0.01){
+  
+  w = portfolios
+  #calculating best portfolio
+  w <- w[w$mean >= expected,]
+  w <- w[w$risk == min(w$risk),]
+  return (w)
+}
 
 
-generatePortfolios <- function(returns,risk){
+#function below are internal and not documented
+
+
+
+#build a dataframe with returns for each
+#security in a separate column
+#not use directly: use simulatePortfolio
+
+combinedReturns <- function (symbols,days) {
+  sym=symbols[1]
+  
+  x   = load(sym,days,usecache = TRUE)
+  x <- x[,-1*(2:6)]
+  
+  for (sym in symbols[2:length(symbols)]){
+    y  =  load(sym,days,usecache = TRUE)
+    x <- mergeSecurities(x,y,sym)
+  }
+  
+  
+  returns <- computeReturns(x)
+  names(returns) <- symbols
+  returns
+}
+
+generatePortfolios <- function(returns,granularity=0.04){
   #covariance matrix
   x <- returns
   S <- cov(t(x))
@@ -27,7 +85,7 @@ generatePortfolios <- function(returns,risk){
     rowMeans(we%*%x)
   }
   
-  grid.axis <- list ( (0:25)*0.04)
+  grid.axis <- list ( (0:(granularity^-1))*granularity)
   
   k <- nrow(x)
   
@@ -40,29 +98,5 @@ generatePortfolios <- function(returns,risk){
   
   return (w)
 }
-
-bestPortfolio <- function(portfolios,expected=0.01){
-
-  w = portfolios
-  #calculating best portfolio
-  w <- w[w$mean >= expected,]
-  w <- w[w$risk == min(w$risk),]
-  return (w)
-}
-
-#example, see portfolio1 for full example
-days=252
-x1=rnorm(days,0.01,0.01)
-x2=rnorm(days,0.02,0.05)
-x3=0.5*x1 - 0.5*rnorm(days,-0.02,0.3)
-x=rbind(x1,x2,x3)
-
-portfolios <- generatePortfolios(x)
-
-print (portfolios)
-
-plot(portfolios$risk,portfolios$mean)
-
-print (bestPortfolio(portfolios))
 
 

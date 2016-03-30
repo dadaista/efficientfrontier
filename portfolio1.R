@@ -4,27 +4,11 @@
 source("util.R")
 source("frontier.R")
 symbols <- c("IAU","TSN","T","ARG","BTCUSD")
-n=90
+days=90
 
 
-sym=symbols[1]
+p <- simulatePortfolios(symbols,days,granularity = 0.1)
 
-x   = load(sym,n)
-x <- x[,-1*(2:6)]
-
-for (sym in symbols[2:5]){
-  y  =  load(sym,n)
-  x <- mergeSecurities(x,y,sym)
-}
-
-
-returns <- computeReturns(x)
-
-
-
-#remove Dates
-
-p <- generatePortfolios(t(returns))
 plot(p$risk,p$mean)
 
 best <- bestPortfolio(p,expected = 0.0025) #change 0.002 with feasible return
