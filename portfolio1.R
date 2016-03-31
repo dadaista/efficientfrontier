@@ -7,10 +7,18 @@ symbols <- c("IAU","TSN","T","ARG","BTCUSD")
 days=90
 
 
-p <- simulatePortfolios(symbols,days,granularity = 0.1)
+p <- simulatePortfolios(symbols,days,granularity = 0.02)
 
 plot(p$risk,p$mean)
 
-best <- bestPortfolio(p,expected = 0.0025) #change 0.002 with feasible return
-names(best) <- c(symbols,"risk","return")
+
+names(p) <- c(symbols,"risk","mean")
+
+lowRisk <- p[order(p$risk),]#show low risk portfolio
+head(lowRisk)
+
+highRet <- p[order(p$mean,decreasing = T),]#show high return portfolios
+head(highRet)
+
+best <- bestPortfolio(p,expected = 0.0015)
 best
