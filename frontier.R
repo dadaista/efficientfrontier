@@ -10,7 +10,7 @@
 
 library(matrixStats)
 
-#' simulate all possible portfolios for symbols 
+#' montecarlo simulation portfolios for symbols 
 #'
 #' @param symbols 
 #' @param days 

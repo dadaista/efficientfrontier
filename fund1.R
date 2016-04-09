@@ -1,6 +1,16 @@
-# symbols <- c("IAU","FB","T","BTCUSD")
-# Var1 Var2 Var3 Var4        risk       mean
-# 0.16 0.08  0.6 0.16 0.008179422 0.00200309
+#Febr
+# c("IAU","FB","T","BTCUSD"),
+# c(0.16,0.08,0.6,0.16))
+
+#March 
+# IAU       TSN         T       ARG     BTCUSD        risk        mean
+# 0.1782578 0.2362685 0.3293723 0.1566057 0.09949573 0.006839026 0.002518169
+
+#2 Apr 16
+# IAU        TSN       CPB       ARG       BTCUSD        ED        risk        mean    sharpe
+# 0.1822796 0.10541063 0.2105653 0.2350269 0.06047626 0.2062413 0.005150772 0.002315646 0.4495726
+
+
 
 library(ggplot2)
 source("util.R")
@@ -9,36 +19,15 @@ november <- paste(2015,"11",days[1:30],sep = "-")
 december <- paste(2015,"12",days[1:31],sep = "-")
 january = paste(2016,"01",days[1:31],sep = "-")
 february = paste(2016,"02",days[1:29],sep = "-")
-march <-  paste(2016,"03",days[1:19],sep = "-")
+march <-  paste(2016,"03",days[1:31],sep = "-")
 
 
-date = "2015-11-01"
-fund <-   data.frame(Date = date,cash=10000)
+
+
+
+
+fund <- topUp(fund,"2016-01-01","T",800)
 fund
-
-
-
-fund <- placeOrders(fund,
-                    c("IAU","FB","T","BTCUSD"),
-                    "2015-11-02",
-                    c(1600,800,6000,1600))
-
-fund
-
-
-
-fund <- sell(fund,"2016-03-18","FB")
-fund
-
-fund <- sell(fund,"2016-03-18","T",75)
-fund
-
-fund <- sell(fund,"2016-03-18","BTCUSD",2.34)
-fund
-
-fund <- buy(fund,"2016-03-21","IAU",146)
-fund 
-
 
 period <- c(november,
             december,

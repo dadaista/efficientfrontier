@@ -173,6 +173,11 @@ priceAtDate <- function(date,symbol){
 pricesAtDate <- Vectorize(priceAtDate,"symbol")
 
 placeOrders <- function(fund,symbols,date,values){
+  
+  lastDate <- fund[nrow(fund),"Date"]
+  stopifnot(date>=lastDate)
+  
+  
   p <- pricesAtDate(date,symbols)
   p
   qtys = values / p
@@ -193,16 +198,25 @@ placeOrders <- function(fund,symbols,date,values){
   fund
 }
 
-sell <- function(fund,date,symbol,qty=-1){
-  
-  if(qty == -1){#sell all
-    qty = tail(fund[symbol],1)
+sell <- function(fund,date,symbol,qty="all"){
+  if(qty == "all"){#sell all
+    qty = fund[nrow(fund),symbol]
+    if(is.null(qty)) qty = 0
   }
   p <- priceAtDate(date,c(symbol))
   val <- qty * p
   f <- placeOrders(fund,c(symbol),date,-val)
   f
 }
+
+
+topUp <- function(fund,date,symbol,atValue){
+  f <- sell(fund,date,symbol)
+  f <- placeOrders(fund,date,symbol,atValue)
+  f
+}
+
+
 
 buy <- function(fund,date,symbol,qty){
   p <- priceAtDate(date,c(symbol))
@@ -228,5 +242,6 @@ equityByDate <- function(fund,date){
   value <- value + df$cash[N]
   value
 }
+
 
 equityOverPeriod <- Vectorize(equityByDate,"date")
