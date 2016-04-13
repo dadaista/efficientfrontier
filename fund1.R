@@ -1,10 +1,5 @@
-#Febr
-# c("IAU","FB","T","BTCUSD"),
-# c(0.16,0.08,0.6,0.16))
 
-#March 
-# IAU       TSN         T       ARG     BTCUSD        risk        mean
-# 0.1782578 0.2362685 0.3293723 0.1566057 0.09949573 0.006839026 0.002518169
+
 
 #2 Apr 16
 # IAU        TSN       CPB       ARG       BTCUSD        ED        risk        mean    sharpe
@@ -20,25 +15,42 @@ december <- paste(2015,"12",days[1:31],sep = "-")
 january = paste(2016,"01",days[1:31],sep = "-")
 february = paste(2016,"02",days[1:29],sep = "-")
 march <-  paste(2016,"03",days[1:31],sep = "-")
+april <-  paste(2016,"04",days[1:12],sep = "-")
 
 
 
 
+fund <-   data.frame(Date = "2016-02-01",cash=10000)
+#Febr
+# c("IAU","FB","T","BTCUSD"),
+# c(0.16,0.08,0.6,0.16))
+fund <- topUp(fund,"2016-02-01","T",6000)
+fund <- topUp(fund,"2016-02-01","IAU",1600)
+fund <- topUp(fund,"2016-02-01","FB",800)
+fund <- topUp(fund,"2016-02-01","BTCUSD",1600)
+fund
+#March 
+# IAU       TSN         T       ARG     BTCUSD        risk        mean
+# 0.1782578 0.2362685 0.3293723 0.1566057 0.09949573 0.006839026 0.002518169
+fund <- topUp(fund,"2016-03-01","T",3293)
+fund <- topUp(fund,"2016-03-01","IAU",1782)
+fund <- topUp(fund,"2016-03-01","TSN",2363)
+fund <- topUp(fund,"2016-03-01","ARG",1566)
+fund <- topUp(fund,"2016-03-01","BTCUSD",990)
+fund <- topUp(fund,"2016-03-01","FB",0)
 
-
-fund <- topUp(fund,"2016-01-01","T",800)
 fund
 
-period <- c(november,
-            december,
-            january,
-            february,
-            march)
+period <- c(february,
+            march,
+            april)
 equity <- equityOverPeriod(fund,period)
 equity
 
 equity.norm <- equity / equity[1]
-benchmark <- load("SPY",length(equity))$Adj.Close
+benchmark <- load("SPY",length(equity))
+
+benchmark=benchmark[benchmark$Date>=period[1],"Adj.Close"]
 benchmark.norm <- benchmark / benchmark[1]
 df <- data.frame(equity=equity.norm,benchmark=benchmark.norm)
 

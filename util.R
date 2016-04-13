@@ -37,7 +37,7 @@ buildYahooUrl<-function(asset){
 #' @export
 #'
 #' @examples
-load<-function(asset,n=0,usecache=FALSE){
+load<-function(asset,n=0,usecache=TRUE){
   
   if(usecache==TRUE){
     print("cache lookup...")
@@ -160,11 +160,11 @@ alpha <- function(fund.return, market.return,beta){
   fund.return - beta*market.return
 }
 
-priceAtDate <- function(date,symbol){
+priceAtDate <- function(adate,symbol){
   df <- load(symbol,usecache = TRUE)
   if(symbol!="BTCUSD")df <- df[,c(1,7)]
   
-  df <- df[df$Date<=date,]
+  df <- df[df$Date<=adate,]
   price <-  df$Adj.Close[nrow(df)]
   price
 }
@@ -172,17 +172,17 @@ priceAtDate <- function(date,symbol){
 
 pricesAtDate <- Vectorize(priceAtDate,"symbol")
 
-placeOrders <- function(fund,symbols,date,values){
+placeOrders <- function(fund,aDate,stocks,values){
   
   lastDate <- fund[nrow(fund),"Date"]
-  stopifnot(date>=lastDate)
+  stopifnot(aDate>=lastDate)
   
   
-  p <- pricesAtDate(date,symbols)
+  p <- pricesAtDate(aDate,stocks)
   p
   qtys = values / p
   
-  newsymbols <- symbols[!symbols %in% names(fund)]
+  newsymbols <- stocks[!stocks %in% names(fund)]
   actualRows <- nrow(fund)
   m <- matrix(0,actualRows,length(newsymbols))
   m <- as.data.frame(m)
@@ -192,8 +192,8 @@ placeOrders <- function(fund,symbols,date,values){
   
   N <-  nrow(fund)
   fund <- rbind(fund,fund[N,])
-  fund[N+1,"Date"] <- date
-  fund[N+1,symbols] <- fund[N,symbols]+qtys
+  fund[N+1,"Date"] <- aDate
+  fund[N+1,stocks] <- fund[N,stocks]+qtys
   fund[N+1,"cash"] <- fund[N+1,"cash"] - sum(values)
   fund
 }
@@ -201,18 +201,19 @@ placeOrders <- function(fund,symbols,date,values){
 sell <- function(fund,date,symbol,qty="all"){
   if(qty == "all"){#sell all
     qty = fund[nrow(fund),symbol]
-    if(is.null(qty)) qty = 0
+    if(is.null(qty))
+      return (fund)
   }
   p <- priceAtDate(date,c(symbol))
   val <- qty * p
-  f <- placeOrders(fund,c(symbol),date,-val)
+  f <- placeOrders(fund,date,c(symbol),-val)
   f
 }
 
 
 topUp <- function(fund,date,symbol,atValue){
   f <- sell(fund,date,symbol)
-  f <- placeOrders(fund,date,symbol,atValue)
+  f <- placeOrders(f,date,symbol,atValue)
   f
 }
 
