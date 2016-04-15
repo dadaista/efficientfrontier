@@ -231,11 +231,11 @@ equityByDate <- function(fund,date){
   df <- fund[fund$Date<=date,]
   df
   N <- nrow(df)
-  Qty <- df[N,2:5]
+  k <- ncol(df)
+  Qty <- df[N,3:k]
   Qty <- data.matrix(Qty)
   
-  k <-  length(names(fund))
-  symbols <- names(fund)[c(-1,-k)] # remove all non equity symbols
+  symbols <- names(fund)[3:k] # remove all non equity symbols
   symbols
   Price <- pricesAtDate(date,symbols)
   Price
@@ -245,4 +245,8 @@ equityByDate <- function(fund,date){
 }
 
 
-equityOverPeriod <- Vectorize(equityByDate,"date")
+equityOverPeriod <- function(fund,period){
+  f <- Vectorize(equityByDate,"date")
+  x <- f(fund,period)
+  data.frame(Date=period,equity=x)
+}

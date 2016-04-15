@@ -47,17 +47,21 @@ period <- c(february,
 equity <- equityOverPeriod(fund,period)
 equity
 
-equity.norm <- equity / equity[1]
-benchmark <- load("SPY",length(equity))
+benchmark <- load("SPY")
 
-benchmark=benchmark[benchmark$Date>=period[1],"Adj.Close"]
-benchmark.norm <- benchmark / benchmark[1]
-df <- data.frame(equity=equity.norm,benchmark=benchmark.norm)
+commonDates <- intersect(equity$Date,benchmark$Date)
+equity <- equity[equity$Date %in% commonDates,]
+equity$equity <- equity$equity / equity$equity[1]
+
+
+benchmark=benchmark[benchmark$Date %in% commonDates,c("Date","Adj.Close")]
+benchmark$Adj.Close <- benchmark$Adj.Close / benchmark$Adj.Close[1]
+df <- data.frame(Date=commonDates,equity=equity$equity,benchmark=benchmark$Adj.Close)
 
 df
-plot(equity.norm,t='l',ylim = c(0.8,1.15),col="blue", xaxt="n")
-lines(benchmark.norm,col="red")
-L <- round(length(equity) / 10)
+plot(df$equity,t='l',ylim = c(0.8,1.15),col="blue", xaxt="n")
+lines(df$benchmark,col="red")
+L <- round(nrow(df) / 10)
 axis(side=1,labels = period[1:10 * L], at=1:10 * L)
 
 legend("topleft",
