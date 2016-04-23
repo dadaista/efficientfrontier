@@ -24,16 +24,36 @@ fs <- function(Ticker){
   sd(returns)
 }
 
+fr <- function(Ticker){#function for rate of change
+  x <- load(Ticker,n=90,usecache = TRUE)$Adj.Close
+  r <- rateOfChange(x)
+  r[length(r)]#only the last value (most recent rate of change)
+}
+
 ym <- sapply(Tickers, fm)
 ys <- sapply(Tickers, fs)
+yr <- sapply(Tickers, fr)
 
 df$Return = ym
 df$Volatility = ys
+df$RateOfChange = yr
 df
   
 df <- df[order(-df$Return),]
 df
 write.csv(df,"sp500.ret.sd.csv")  
+
+df$Sharpe = df$Return / df$Volatility
+
+
+
+df <- df[order(-df$Sharpe),]
+df
+
+#select the ones with return > 1e-3 ranked per sharpe
+df2 <- df[df$Return>1e-3,]
+head(df2,10)
+
 
 # 1 Apr 1016
 # X Ticker                  Security      Return Volatility    sharpe

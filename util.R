@@ -66,6 +66,26 @@ load<-function(asset,n=0,usecache=TRUE){
   
 }
 
+
+
+#' Rate of Change
+#'
+#' @param price: a vector of prices
+#' @param lag  
+#'
+#' @return the rate of change vector
+#' @export
+#'
+#' @examples
+rateOfChange<-function(price,lag=10){
+  
+  N<-length(price)
+  d<-price[(lag+1):N] - price[1:(N-lag)] 
+  
+  r<-d/price[1:(N-lag)]
+  return(r)
+}
+
 #' load Bitcoin prices from blockchain.info
 #'
 #' @return
