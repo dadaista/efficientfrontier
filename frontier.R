@@ -65,7 +65,10 @@ combinedReturns <- function (symbols,days) {
   }
   
   
-  returns <- computeReturns(x)
+  n <- nrow(x)
+  x <- x[,-1]#remove date column
+  returns <- (x[2:n, ] - x[1:(n-1),])/x[1:(n-1),]
+
   names(returns) <- symbols
   returns
 }

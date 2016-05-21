@@ -19,14 +19,14 @@ for (tk in Tickers){
 
 fm <- function(Ticker){
   x <- cache[[Ticker]]$Adj.Close
-  returns <- getReturns(x)
+  returns <- price2Return(x)
   
   mean(returns)
 }
 
 fs <- function(Ticker){
   x <- cache[[Ticker]]$Adj.Close  
-  returns <- getReturns(x)
+  returns <- price2Return(x)
   sd(returns)
 }
 

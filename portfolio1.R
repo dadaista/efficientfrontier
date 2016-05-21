@@ -3,7 +3,7 @@
 #it merges all trading dates using mergeSecurities function
 source("util.R")
 source("frontier.R")
-symbols <- c("IAU","SPY","BTCUSD","IBB","CMI")
+symbols <- c("IAU","SPY","BTCUSD","EWJ")
 days=90
 
 
@@ -21,9 +21,10 @@ highRet <- p[order(p$mean,decreasing = T),]#show high return portfolios
 head(highRet)
 
 q <- p[complete.cases(p),]
-best <- bestPortfolio(q,expected = 0.0015)
+best <- bestPortfolio(q,expected = 0.00125)
 best
 
 
 q$sharpe <- q$mean / q$risk
 head(q[order(q$sharpe,decreasing = T),])
+
