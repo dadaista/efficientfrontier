@@ -12,24 +12,23 @@ may <-  paste(2016,"05",days[1:20],sep = "-")
 
 
 
-date1="2016-05-01"
-fund <-   data.frame(Date = date1,cash=7500)
+date1="2016-03-01"
+fund <-   data.frame(Date = date1,cash=1000)
 #Febr
 # c("IAU","FB","T","BTCUSD"),
 # c(0.16,0.08,0.6,0.16))
 
-fund <- topUp(fund,date1,"IAU",1300)
-fund <- topUp(fund,date1,"TSN",1000)
-fund <- topUp(fund,date1,"BTCUSD",500)
-fund <- topUp(fund,date1,"ED",1500)
-fund <- topUp(fund,date1,"CPB",1550)
+fund <- topUp(fund,date1,"IAU",467)
+fund <- topUp(fund,date1,"SPY",471)
+fund <- topUp(fund,date1,"BTCUSD",56)
+fund <- topUp(fund,date1,"EWJ",48)
 
 fund
 
 
 
 
-period <- c(may)
+period <- c(march,april,may)
 equity <- equityOverPeriod(fund,period)
 equity
 
@@ -45,7 +44,7 @@ benchmark$Adj.Close <- benchmark$Adj.Close / benchmark$Adj.Close[1]
 df <- data.frame(Date=commonDates,equity=equity$equity,benchmark=benchmark$Adj.Close)
 
 df
-plot(df$equity,t='l',ylim = c(0.97,1.03),col="blue", xaxt="n")
+plot(df$equity,t='l',ylim = c(1.0,1.06),col="blue", xaxt="n")
 lines(df$benchmark,col="red")
 L <- round(nrow(df) / 10)
 axis(side=1,labels = period[1:10 * L], at=1:10 * L)

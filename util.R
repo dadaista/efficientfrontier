@@ -1,17 +1,6 @@
-
 options(stringsAsFactors = FALSE)
-
 cache=list(init=TRUE)
 
-
-#' build a url for yahoo api
-#'
-#' @param asset, a ticker 
-#'
-#' @return a url
-#' @export
-#'
-#' @examples
 buildYahooUrl<-function(asset){
   
   aDate=strsplit(as.character(Sys.Date()),"-")[[1]]
@@ -20,10 +9,7 @@ buildYahooUrl<-function(asset){
   year=as.numeric(aDate[1])
   #u<- 'http://real-chart.finance.yahoo.com/table.csv?s=%5ENDX&a=09&b=11&c=2010&d=09&e=11&f=2015&g=d&ignore=.csv'
   baseu<-'http://real-chart.finance.yahoo.com/table.csv?s='
-
-  
   u=sprintf("%s%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv",baseu,asset,month,day,year-1,month,day,year)
-  print(u)
   return (u)
   
 }
@@ -38,9 +24,10 @@ buildYahooUrl<-function(asset){
 #'
 #' @examples
 load<-function(asset,n=0,usecache=TRUE){
-  
+  Sys.sleep(1)#to prevent congestion
   if(usecache==TRUE){
-    print("cache lookup...")
+    print("cache lookup for symbol...")
+    print(asset)
     if(asset %in% names(cache)){
       print("loading from cache...")
       return(cache[[asset]])
@@ -54,6 +41,9 @@ load<-function(asset,n=0,usecache=TRUE){
   df<-read.csv(buildYahooUrl(asset))
   #df$Adj.Close=(1:262)*10
 
+  #keep only price and date columns
+  df <- df[,c("Date","Adj.Close")]
+  
   if (n>0)
     df <- df[1:n,]
   
@@ -62,8 +52,6 @@ load<-function(asset,n=0,usecache=TRUE){
   df <- df[nrow(df):1,]
   cache[[asset]] <<- df
   df
-
-  
 }
 
 
@@ -136,8 +124,6 @@ mergeSecurities <- function(df,data,symbol){
 
 priceAtDate <- function(adate,symbol){
   df <- load(symbol,usecache = TRUE)
-  if(symbol!="BTCUSD")df <- df[,c(1,7)]
-  
   df <- df[df$Date<=adate,]
   price <-  df$Adj.Close[nrow(df)]
   price
@@ -197,7 +183,7 @@ topUp <- function(fund,date,symbol,atValue){
 buy <- function(fund,date,symbol,qty){
   p <- priceAtDate(date,c(symbol))
   val <- qty * p
-  f <- placeOrders(fund,c(symbol),date,val)
+  f <- placeOrders(fund,date,c(symbol),c(val))
   f
 }
 

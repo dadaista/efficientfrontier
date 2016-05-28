@@ -33,9 +33,6 @@ test.buyNeg <- function(){#buy negative quantity is like sell
   checkEquals(f[3,"T"],0)
 }
 
-test.bar <- function(){
-  checkEquals(1,2)
-}
 
 test.placeOrders <- function(){
   
@@ -63,8 +60,8 @@ test.topUp <- function(){
 
 test.messingDates <- function(){#cannot buy in a date anterior to last date
 
-  f <- placeOrders(fund,"T",date2,1000)
-  checkException(placeOrders(f,"T",date1,1000))
+  f <- placeOrders(fund,date2,c("T"),c(1000));
+  checkException(placeOrders(fund,date1,c("T"),c(1000)));
 }
 
 
