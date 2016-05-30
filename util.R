@@ -1,6 +1,19 @@
 options(stringsAsFactors = FALSE)
 cache=list(init=TRUE)
 
+# A calendar
+days=c("01","02","03","04","05","06","07","08","09",as.character(10:31))
+november <- paste(2015,"11",days[1:30],sep = "-")
+december <- paste(2015,"12",days[1:31],sep = "-")
+january = paste(2016,"01",days[1:31],sep = "-")
+february = paste(2016,"02",days[1:29],sep = "-")
+march <-  paste(2016,"03",days[1:31],sep = "-")
+april <-  paste(2016,"04",days[1:30],sep = "-")
+may <-  paste(2016,"05",days[1:28],sep = "-")
+
+
+
+
 buildYahooUrl<-function(asset){
   
   aDate=strsplit(as.character(Sys.Date()),"-")[[1]]
@@ -102,7 +115,7 @@ loadBTC<-function(){
 #' Merges two securities data frames with different dates to get a single
 #' dataframe with same dates and one column for each security 
 #'
-#' @param df a dataframe with columns Date and Adj.Close
+#' @param df a dataframe with columns Date and one column of prices per symbol
 #' @param data another data frame as loaded by load()
 #' @param symbol the name of the symbol for data
 #'

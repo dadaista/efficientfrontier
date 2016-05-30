@@ -57,7 +57,7 @@ combinedReturns <- function (symbols,days) {
   sym=symbols[1]
   
   x   = load(sym,days,usecache = TRUE)
-  x <- x[,-1*(2:6)]
+  #x <- x[,-1*(2:6)]
   
   for (sym in symbols[2:length(symbols)]){
     y  =  load(sym,days,usecache = TRUE)

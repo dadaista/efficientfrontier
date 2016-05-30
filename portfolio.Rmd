@@ -1,0 +1,53 @@
+---
+title: "An example of allocation on the frontier"
+author: "Davide Carboni"
+date: "30 May 2016"
+output: html_document
+---
+
+Example of use of frontier.R this script takes symbols and find the efficient frontier 
+
+```{r include=FALSE}
+source("util.R")
+source("frontier.R")
+
+```
+
+Lets build a portfolio with gold, SP500, Bitcoin and Japan index.
+```{r}
+symbols <- c("IAU","SPY","BTCUSD","EWJ")
+days=90
+
+```
+
+
+Simulate the portfolios, the lower the granularity the more portfolios are simulated
+```{r}
+p <- simulatePortfolios(symbols,days,granularity = 0.02)
+plot(p$risk,p$mean)
+names(p) <- c(symbols,"risk","mean")
+```
+
+
+Show the lowest risk portfolios
+```{r}
+lowRisk <- p[order(p$risk),]#show low risk portfolio
+head(lowRisk)
+```
+
+Show the highest return portfolios
+```{r}
+
+highRet <- p[order(p$mean,decreasing = T),]#show high return portfolios
+head(highRet)
+```
+
+Select an expected return and find the portfolio with minimun risk
+```{r}
+q <- p[complete.cases(p),]
+best <- bestPortfolio(q,expected = 0.00125)
+best
+```
+
+
+

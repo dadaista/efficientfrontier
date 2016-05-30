@@ -1,22 +1,8 @@
 
-library(ggplot2)
 source("util.R")
-days=c("01","02","03","04","05","06","07","08","09",as.character(10:31))
-november <- paste(2015,"11",days[1:30],sep = "-")
-december <- paste(2015,"12",days[1:31],sep = "-")
-january = paste(2016,"01",days[1:31],sep = "-")
-february = paste(2016,"02",days[1:29],sep = "-")
-march <-  paste(2016,"03",days[1:31],sep = "-")
-april <-  paste(2016,"04",days[1:30],sep = "-")
-may <-  paste(2016,"05",days[1:20],sep = "-")
-
-
 
 date1="2016-03-01"
 fund <-   data.frame(Date = date1,cash=1000)
-#Febr
-# c("IAU","FB","T","BTCUSD"),
-# c(0.16,0.08,0.6,0.16))
 
 fund <- topUp(fund,date1,"IAU",467)
 fund <- topUp(fund,date1,"SPY",471)
