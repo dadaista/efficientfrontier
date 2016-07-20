@@ -15,7 +15,7 @@ source("frontier.R")
 
 Lets build a portfolio with gold, SP500, Bitcoin and Japan index.
 ```{r}
-symbols <- c("IAU","SPY","BTCUSD","EWJ")
+symbols <- c("IAU","SPY","USDCAD","BTCUSD")
 days=90
 
 ```
@@ -45,7 +45,7 @@ head(highRet)
 Select an expected return and find the portfolio with minimun risk
 ```{r}
 q <- p[complete.cases(p),]
-best <- bestPortfolio(q,expected = 0.00125)
+best <- bestPortfolio(q,expected = 0.0015)
 best
 ```
 

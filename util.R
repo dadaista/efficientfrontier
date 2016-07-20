@@ -102,8 +102,11 @@ loadBTC<-function(){
   
   print("loadinf from blockchain.info...")
   df<-read.csv('https://blockchain.info/charts/market-price?showDataPoints=false&timespan=180days&show_header=true&daysAverageString=1&scale=0&format=csv&address=')
-  df[,1]<-as.character(as.Date(df[,1],format="%d/%m/%Y"))
-  return(data.frame(list(Date=df[,1],Adj.Close=df[,2])))
+  #df[,1]<-as.character(as.Date(df[,1],format="%d/%m/%Y"))
+  
+  df[,1] = as.character(as.Date(df[,1]))
+  names(df) <- c("Date","Adj.Close")
+  df
 }
 
 

@@ -56,11 +56,11 @@ bestPortfolio <- function(portfolios,expected=0.01){
 combinedReturns <- function (symbols,days) {
   sym=symbols[1]
   
-  x   = load(sym,days,usecache = TRUE)
+  x   = load(sym,days,usecache = FALSE)
   #x <- x[,-1*(2:6)]
   
   for (sym in symbols[2:length(symbols)]){
-    y  =  load(sym,days,usecache = TRUE)
+    y  =  load(sym,days,usecache = FALSE)
     x <- mergeSecurities(x,y,sym)
   }
   
