@@ -15,7 +15,10 @@ source("frontier.R")
 
 Lets build a portfolio with gold, SP500, Bitcoin and Japan index.
 ```{r}
-symbols <- c("IAU","SPY","USDCAD","BTCUSD")
+symbols <- c("IAU","SPY","^GDAXI",
+          "^FTSE","OIL",
+          "FTSEMIB.MI","A2A.MI",
+           "XLU")
 days=90
 
 ```

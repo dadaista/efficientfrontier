@@ -1,10 +1,11 @@
 library('RUnit')
 
-source('util.R')
-
+#source('util.R')
+source("loader.R")
 test.suite <- defineTestSuite("portfolio",
                               dirs = file.path("test"),
-                              testFileRegexp = '^\\d+\\.R')
+                              testFileRegexp = '^loaderTest.R')
+                              #testFileRegexp = '^\\d+\\.R')
 
 test.result <- runTestSuite(test.suite)
 

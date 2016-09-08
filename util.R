@@ -87,6 +87,31 @@ rateOfChange<-function(price,lag=10){
   return(r)
 }
 
+#' Rate of Change
+#'
+#' @param price: a vector of prices
+#' @param lag  
+#'
+#' @return a rate of change vector where v(i) is equal to pos/lag, where pos is number of 
+#' days with positive return in the previous lag-days
+#' @export
+#'
+#' @examples
+
+rateOfChangeBool <- function(x,lag){
+  drt <-  price2Return(x)
+  m = length(drt)
+  y = drt > 0
+  z = c()
+  for (i in lag:m){
+    z=c(z,sum(y[(i-lag):i]))
+  }
+  z <- z / lag - 0.5
+  z
+}
+
+
+
 price2Return <- function(price){
   rateOfChange(price,lag=1)
 }
@@ -227,3 +252,6 @@ equityOverPeriod <- function(fund,period){
   x <- f(fund,period)
   data.frame(Date=period,equity=x)
 }
+
+
+
