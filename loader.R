@@ -1,6 +1,6 @@
-cache=list(init=TRUE)
 epoch <- function() as.integer(as.POSIXct(Sys.time()))
 lastReadTime <- epoch()
+library(lubridate)
 
 as.date <- function(dateVector){
   year = dateVector[1]
@@ -53,10 +53,11 @@ load<-function(tick,start, end){#sec
 
 
 loadBTC<-function(start,end){
-  print("loadinf from coinbase")
+  stop("BTC load not working yet!!!")
   start <- as.date(start)
   end <- as.date(end)
   url = sprintf('https://api.coindesk.com/v1/bpi/historical/close.csv?start=%s&end=%s',start,end)
+  url
   df<-read.csv(url)
   #df[,1]<-as.character(as.Date(df[,1],format="%d/%m/%Y"))
   
@@ -69,19 +70,22 @@ loadBTC<-function(start,end){
 
 
 
+loadMulti <- function(tickers,start,end){
+  df <- data.frame()
+  for (t in tickers){
+    data <- load(t,start,end)
+    df <- mergeCloses(df,data,t)
+  }
+  names(df) <- c("Date",tickers)
+  df
+}
 
-#' Merges two securities data frames with different dates to get a single
-#' dataframe with same dates and one column for each security 
-#'
-#' @param df a dataframe with columns Date and one column of prices per symbol
-#' @param data another data frame as loaded by load()
-#' @param symbol the name of the symbol for data
-#'
-#' @return  merges dates in order to consider only a subset of rows
-#' @export
-#'
-#' @examples
-mergeSecurities <- function(df,data,symbol){
+mergeCloses <- function(df,data,symbol){
+  
+  if(nrow(df)==0) return(data)
+  if(nrow(data)==0) return(df)
+  
+  
   dates1 <- df$Date
   dates2 <- data$Date
   dates = intersect(dates1,dates2)#keep only dates in common
@@ -93,13 +97,22 @@ mergeSecurities <- function(df,data,symbol){
 
 
 
-priceAtDate <- function(adate,symbol){
-  df <- load(symbol,usecache = TRUE)
-  df <- df[df$Date<=adate,]
-  price <-  df$Adj.Close[nrow(df)]
-  price
+pricesAtDate <- function(tickers,adate){
+  d1 = as.date(adate)
+  d1 <- date(d1)#a lubridate object
+  d0 <- d1 - 30
+  
+  df <- loadMulti(tickers,c(year(d0),month(d0),day(d0)),adate) 
+  tail(df,1)
 }
 
-pricesAtDate <- Vectorize(priceAtDate,"symbol")
 
-
+as.returns <- function(prices){
+  x <- prices
+  n <- nrow(x)
+  dates <- x[,1]
+  x <- x[,-1]#remove date column
+  returns <- (x[2:n, ] - x[1:(n-1),])/x[1:(n-1),]
+  returns$Date <- dates[2:n]
+  returns
+}
