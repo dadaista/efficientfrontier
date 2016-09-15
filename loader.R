@@ -70,7 +70,15 @@ loadBTC<-function(start,end){
 
 
 
-loadMulti <- function(tickers,start,end){
+loadMulti <- function(tickers,start,end,to.date=0){
+  
+  if(to.date>0){
+    today <- Sys.Date()
+    end <- c(year(today),month(today),day(today))
+    start <- today - to.date
+    start <- c(year(start),month(start),day(start))
+  }
+  
   df <- data.frame()
   for (t in tickers){
     data <- load(t,start,end)

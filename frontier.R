@@ -9,7 +9,7 @@
 
 
 library(matrixStats)
-
+source("loader.R")
 #' montecarlo simulation portfolios for symbols 
 #'
 #' @param symbols 
@@ -21,8 +21,8 @@ library(matrixStats)
 #'
 #' @examples
 simulatePortfolios <- function (symbols, days, granularity=0.04) {
-  returns = combinedReturns(symbols,days)
-  portfolios <- generatePortfolios(t(returns),granularity)
+  returns = as.returns(loadMulti(symbols,to.date=days))
+  portfolios <- generatePortfolios(returns,granularity)
   portfolios
 }
 
@@ -45,38 +45,17 @@ bestPortfolio <- function(portfolios,expected=0.01){
 }
 
 
-#function below are internal and not documented
 
 
 
-#build a dataframe with returns for each
-#security in a separate column
-#not use directly: use simulatePortfolio
-
-combinedReturns <- function (symbols,days) {
-  sym=symbols[1]
-  
-  x   = load(sym,days,usecache = FALSE)
-  #x <- x[,-1*(2:6)]
-  
-  for (sym in symbols[2:length(symbols)]){
-    y  =  load(sym,days,usecache = FALSE)
-    x <- mergeSecurities(x,y,sym)
-  }
-  
-  
-  n <- nrow(x)
-  x <- x[,-1]#remove date column
-  returns <- (x[2:n, ] - x[1:(n-1),])/x[1:(n-1),]
-
-  names(returns) <- symbols
-  returns
-}
 
 generatePortfolios <- function(returns,granularity=0.04){
   #covariance matrix
   x <- returns
-
+  #get rid of Dates
+  ix = which(colnames(x)=="Date")
+  x <- x[,-ix]
+  #x <- t(x)
   var.f <- function (w){
     w <- as.matrix(w)
     rowVars( w%*%x )
@@ -89,13 +68,13 @@ generatePortfolios <- function(returns,granularity=0.04){
   
   #grid.axis <- list ( (0:(granularity^-1))*granularity)
   
-  k <- nrow(x)
+  k <- ncol(x) 
   n <- granularity^-2
   #w=expand.grid(rep(grid.axis,k))
   w=matrix(nrow = n,ncol=k)
   
   
-  for(i in 1:(n-1)){
+  for(i in 1:n){
     rnd <- runif(k)
     rnd <- rnd / sum(rnd)#sum(rnd) == 1
     w[i,1:k] <- rnd
@@ -103,8 +82,8 @@ generatePortfolios <- function(returns,granularity=0.04){
   
   #w <- w[rowSums(w)==1,]
   w <- as.data.frame(w)
-  w$risk = sqrt(var.f(w[,1:k]))
-  w$mean = mean.f(w[,1:k])
+  risk = sqrt(var.f(w[,1:k]))
+  mean = mean.f(w[,1:k])
   
   return (w)
 }
