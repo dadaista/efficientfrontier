@@ -20,9 +20,9 @@ source("loader.R")
 #' @export
 #'
 #' @examples
-simulatePortfolios <- function (symbols, days, granularity=0.04) {
+simulatePortfolios <- function (symbols, days, len=10) {
   returns = as.returns(loadMulti(symbols,to.date=days))
-  portfolios <- generatePortfolios(returns,granularity)
+  portfolios <- generatePortfolios(returns,len)
   portfolios
 }
 
@@ -40,7 +40,7 @@ bestPortfolio <- function(portfolios,expected=0.01){
   w = portfolios
   #calculating best portfolio
   w <- w[w$mean >= expected,]
-  w <- w[w$risk == min(w$risk, na.rm = T),]
+  w <- w[w$sd == min(w$sd, na.rm = T),]
   return (w)
 }
 
@@ -49,27 +49,15 @@ bestPortfolio <- function(portfolios,expected=0.01){
 
 
 
-generatePortfolios <- function(returns,granularity=0.04){
+generatePortfolios <- function(returns,len=10){
   #covariance matrix
   x <- returns
   #get rid of Dates
   ix = which(colnames(x)=="Date")
   x <- x[,-ix]
-  #x <- t(x)
-  var.f <- function (w){
-    w <- as.matrix(w)
-    rowVars( w%*%x )
-  }
-  
-  mean.f <- function (we){
-    we <- as.matrix(we)
-    rowMeans(we%*%x)
-  }
-  
-  #grid.axis <- list ( (0:(granularity^-1))*granularity)
-  
+
   k <- ncol(x) 
-  n <- granularity^-2
+  n <- len
   #w=expand.grid(rep(grid.axis,k))
   w=matrix(nrow = n,ncol=k)
   
@@ -80,12 +68,14 @@ generatePortfolios <- function(returns,granularity=0.04){
     w[i,1:k] <- rnd
   }
   
-  #w <- w[rowSums(w)==1,]
-  w <- as.data.frame(w)
-  risk = sqrt(var.f(w[,1:k]))
-  mean = mean.f(w[,1:k])
+  p=data.frame()
+  for(i in 1:nrow(w)){   
+    comb <- apply(x,1,function(prices){sum(prices * w[i,])})
+    p=rbind(p,c(w[i,],mean(comb),sd(comb)))
+  }
+  names(p) <- c(names(x),"mean","sd")
+  p
   
-  return (w)
 }
 
 

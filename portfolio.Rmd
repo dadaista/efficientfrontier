@@ -13,28 +13,25 @@ source("frontier.R")
 
 ```
 
-Lets build a portfolio with gold, SP500, Bitcoin and Japan index.
+Lets build a portfolio with four securities
 ```{r}
-symbols <- c("IAU","SPY","^GDAXI",
-          "^FTSE","OIL",
-          "FTSEMIB.MI","A2A.MI",
-           "XLU")
+symbols <- c("X","FB","MA","MSFT")
 days=90
 
 ```
 
 
-Simulate the portfolios, the lower the granularity the more portfolios are simulated
+Simulate the portfolios, use 1250 samples 
 ```{r}
-p <- simulatePortfolios(symbols,days,granularity = 0.02)
-plot(p$risk,p$mean)
-names(p) <- c(symbols,"risk","mean")
+p <- simulatePortfolios(symbols,days,len=1250)
+plot(p$sd,p$mean)
 ```
 
 
 Show the lowest risk portfolios
 ```{r}
-lowRisk <- p[order(p$risk),]#show low risk portfolio
+p <- p[p$mean>0,]#keep positive returns only
+lowRisk <- p[order(p$sd),]#show low risk portfolio
 head(lowRisk)
 ```
 
@@ -52,5 +49,9 @@ best <- bestPortfolio(q,expected = 0.0015)
 best
 ```
 
+So if you have 1000$ to invest this is the best breakdown
+```{r}
+round(1000 * best)[,-5:-6] 
+```
 
 
