@@ -1,0 +1,6 @@
+{
+  "name": "Frontier",
+  "tagline": "A monte carlo simulation of Markovitz Modern Portfolio Theory",
+  "body": "# FrontieR\r\nA simple R implementation of Markovitz Modern Portfolio Theory and some other utils\r\n\r\n![Example of frontier](https://raw.githubusercontent.com/dadaista/portfolio/master/frontier.png)\r\n\r\n\r\nSee portfolio.Rmd for an example\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
