@@ -1,9 +1,5 @@
 
-test.load <- function(){
-  df <- load("X",days=20)
-  checkEquals(nrow(df),days)
 
-}
 
 test.url <- function(){
   rslt <- buildYahooUrl("X",c(2016,1,1),c(2016,2,1))
@@ -82,4 +78,18 @@ test.as.return <- function(){
   rets
   checkEquals(rets$A,c(1,1/2,1/3,1/4))
   checkEquals(rets$B,c(0,1,0,0))
+  
+  #only one security
+  df <- data.frame(Dates=dates,A=A)
+  rets <- as.returns(df)
+  rets
+  checkEquals(rets$A,c(1,1/2,1/3,1/4))
+
+  
+}
+
+test.cache <- function(){
+  USECACHE <<- TRUE
+  df <- load("X",c(2012,4,4),c(2012,5,4))
+  checkEquals(cache[[paste("X",as.date(c(2012,4,4)),as.date(c(2012,5,4)))]],df)
 }

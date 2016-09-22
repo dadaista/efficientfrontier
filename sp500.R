@@ -1,5 +1,7 @@
 #build a dataframe for sp500 securities ordered by risk/return/rateof change
-source("util.R")
+source("loader.R")
+source("frontier.R")
+USECACHE<<-TRUE
 df <- read.csv("sp500.csv")
 N <- 500
 
@@ -12,38 +14,20 @@ df <- data.frame(Ticker    =Tickers,
                  Volatility=rep(0,N))
 
 
-for (tk in Tickers){
-  load(tk)#fetch cache
-  Sys.sleep(2)
+
+
+for(i in 1:3){
+  tickers <- sample(df$Ticker,6)
+  tickers
+  prices <- loadMulti(tickers,to.date = 60)
+  rets <- as.returns(prices)
+  portfolios <- generatePortfolios(rets,250)
+  best <- bestPortfolio(portfolios,expected = 0.01)
+  best
 }
 
-fm <- function(Ticker){
-  x <- cache[[Ticker]]$Adj.Close
-  returns <- price2Return(x)
-  
-  mean(returns)
-}
 
-fs <- function(Ticker){
-  x <- cache[[Ticker]]$Adj.Close  
-  returns <- price2Return(x)
-  sd(returns)
-}
 
-fr <- function(Ticker){#function for rate of change
-  x <- cache[[Ticker]]$Adj.Close  
-  r <- rateOfChange(x)
-  r[length(r)]#only the last value (most recent rate of change)
-}
-
-ym <- sapply(Tickers, fm)
-ys <- sapply(Tickers, fs)
-yr <- sapply(Tickers, fr)
-
-df$Return = ym
-df$Volatility = ys
-df$RateOfChange = yr
-df
   
 df <- df[order(-df$Return),]
 df

@@ -1,3 +1,5 @@
+USECACHE <- FALSE
+cache <- list()
 epoch <- function() as.integer(as.POSIXct(Sys.time()))
 lastReadTime <- epoch()
 library(lubridate)
@@ -40,11 +42,20 @@ load<-function(tick,start, end){#sec
   if(tick=="BTC"){
     return(loadBTC(start,end))
   }
+  cache.key <- paste(tick,as.date(start),as.date(end))
+  cache.miss <- !(cache.key %in% names(cache))
   
-  df<-read.csv(buildYahooUrl(tick,start,end))
-  #keep only price and date columns
-  df <- df[,c("Date","Adj.Close")]
-  df <- df[nrow(df):1,]
+  if(USECACHE==FALSE) cache.miss <- TRUE
+  
+  if(cache.miss){
+    df<-read.csv(buildYahooUrl(tick,start,end))
+    #keep only price and date columns
+    df <- df[,c("Date","Adj.Close")]
+    df <- df[nrow(df):1,]
+    if(USECACHE) 
+      cache[[cache.key]] <<- df
+  }else df <- cache[[cache.key]]
+  
   df
 }
 
@@ -120,7 +131,9 @@ as.returns <- function(prices){
   n <- nrow(x)
   dates <- x[,1]
   x <- x[,-1]#remove date column
+  x <- as.matrix(x)
   returns <- (x[2:n, ] - x[1:(n-1),])/x[1:(n-1),]
+  returns <- as.data.frame(returns)
   returns$Date <- dates[2:n]
   returns
 }

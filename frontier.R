@@ -70,7 +70,7 @@ generatePortfolios <- function(returns,len=10){
   
   p=data.frame()
   for(i in 1:nrow(w)){   
-    comb <- apply(x,1,function(prices){sum(prices * w[i,])})
+    comb <- apply(x,1,function(rets){sum(rets * w[i,])})
     p=rbind(p,c(w[i,],mean(comb),sd(comb)))
   }
   names(p) <- c(names(x),"mean","sd")

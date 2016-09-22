@@ -15,8 +15,8 @@ source("frontier.R")
 
 Lets build a portfolio with four securities
 ```{r}
-symbols <- c("X","FB","MA","MSFT")
-days=90
+symbols <- c("NVDA","FB","V","MSFT")
+days=60
 
 ```
 
@@ -49,9 +49,36 @@ best <- bestPortfolio(q,expected = 0.0015)
 best
 ```
 
-So if you have 1000$ to invest this is the best breakdown
+So if you have 10000$ to invest this is the best breakdown
 ```{r}
-round(1000 * best)[,-5:-6] 
+
+round(10000 * best)[,-5:-6] 
 ```
 
+```{r}
+n <-  length(symbols)
+rets = as.returns(loadMulti(c(symbols,"SPY"),to.date = days))
+rets
+weights <- best[,1:n]
+weights
+y <- apply(rets,1,function(x){
+  x <- as.numeric(x)
+  sum(x[1:n] * weights)
+})
+rets$best <- y
+
+d <- data.frame(Date=rets$Date,best=rets$best,SPY=rets$SPY)
+
+equity=c(10000)
+benchmark=c(10000)
+for (i in 1:length(d$Date)){
+  equity <- c(equity,tail(equity,1) * (1 + d$best[i]))
+  benchmark <- c(benchmark,tail(benchmark,1) * (1 + d$SPY[i]))
+}
+equity <- head(equity,length(d$Date))
+benchmark <- head(benchmark,length(d$Date))
+plot(as.Date(d$Date),equity,t='l', ylim=c(min(c(equity,benchmark)),max(c(equity,benchmark))))
+lines(as.Date(d$Date),benchmark,col="red")
+
+```
 
