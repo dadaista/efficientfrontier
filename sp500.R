@@ -15,14 +15,27 @@ df <- data.frame(Ticker    =Tickers,
 
 
 
+for (t in Tickers){
+  try({
+    rets <- as.returns(loadMulti(t,to.date = 60))[,1]
+    m <- mean(rets)
+    s <- sd(rets)
+    df$Return[df$Ticker==t] <- m
+    df$Volatility[df$Ticker==t] <- s})
+  print(t)
+  Sys.sleep(1)
+}
+
+top <- head(df[order(-df$Return),],40)
+top
 
 for(i in 1:3){
-  tickers <- sample(df$Ticker,6)
+  tickers <- sample(top$Ticker,6)
   tickers
   prices <- loadMulti(tickers,to.date = 60)
   rets <- as.returns(prices)
   portfolios <- generatePortfolios(rets,250)
-  best <- bestPortfolio(portfolios,expected = 0.01)
+  best <- bestPortfolio(portfolios,expected = 0.001)
   best
 }
 
