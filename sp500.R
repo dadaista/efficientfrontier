@@ -17,7 +17,7 @@ df <- data.frame(Ticker    =Tickers,
 
 for (t in Tickers){
   try({
-    rets <- as.returns(loadMulti(t,to.date = 60))[,1]
+    rets <- as.returns(loadMulti(t,to.date = 30))[,1]
     m <- mean(rets)
     s <- sd(rets)
     df$Return[df$Ticker==t] <- m
@@ -38,18 +38,19 @@ top
 top$Ticker <- as.character(top$Ticker)
 bestList=list()
 volat=c()
-for(i in 1:300){
-  tickers <- sample(top$Ticker,5)
-  tickers
-  prices <- loadMulti(tickers,to.date = 60)
-  rets <- as.returns(prices)
-  portfolios <- generatePortfolios(rets,250)
-  best <- bestPortfolio(portfolios,expected = 0.001)
-  best
-  bestList[[i]] <- best
-  if(length(best$sd) != 0)
-    volat <- c(volat,best$sd)
-  else volat <- c(volat,NA)
+for(i in 1:500){
+  try({
+    tickers <- sample(top$Ticker,5)
+    tickers
+    prices <- loadMulti(tickers,to.date = 30)
+    rets <- as.returns(prices)
+    portfolios <- generatePortfolios(rets,250)
+    best <- bestPortfolio(portfolios,expected = 0.001)
+    best
+    bestList[[i]] <- best
+    if(length(best$sd) != 0)
+      volat <- c(volat,best$sd)
+    else volat <- c(volat,NA)})
 }
 
 bestList

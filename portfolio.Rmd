@@ -15,8 +15,8 @@ source("frontier.R")
 
 Lets build a portfolio with four securities
 ```{r}
-symbols <- c("NVDA","FB","V","MSFT")
-days=60
+symbols <- c("PG","L","FB","AMZN","DE","CHRW")
+days=30
 
 ```
 
@@ -48,6 +48,13 @@ q <- p[complete.cases(p),]
 best <- bestPortfolio(q,expected = 0.0015)
 best
 ```
+
+Select an expected return and find the portfolios with best sharpe
+```{r}
+q$sharpe = q$mean / q$sd
+head(q[order(q$sharpe),])
+```
+
 
 So if you have 10000$ to invest this is the best breakdown
 ```{r}
