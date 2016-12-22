@@ -43,6 +43,8 @@ top <- top[top$pLoss2pc<0.11,]#keep low loss risk only
 top <-head( top[order(-top$pGain2pc),], 50 )
 top
 
+write.csv(top,"top.csv")
+
 
 
 
