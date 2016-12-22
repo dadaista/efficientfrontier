@@ -15,8 +15,8 @@ source("frontier.R")
 
 Lets build a portfolio with four securities
 ```{r}
-symbols <- c("PG","L","FB","AMZN","DE","CHRW")
-days=30
+symbols <- c("XLU","FB","AMZN","DE","CHRW", "SPY")
+days=60
 
 ```
 

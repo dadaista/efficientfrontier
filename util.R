@@ -1,3 +1,5 @@
+print("DEPRECATED")
+
 options(stringsAsFactors = FALSE)
 cache=list(init=TRUE)
 

@@ -126,14 +126,17 @@ pricesAtDate <- function(tickers,adate){
 }
 
 
-as.returns <- function(prices){
+as.returns <- function(prices, lag=1){
   x <- prices
   n <- nrow(x)
   dates <- x[,1]
   x <- x[,-1]#remove date column
   x <- as.matrix(x)
-  returns <- (x[2:n, ] - x[1:(n-1),])/x[1:(n-1),]
+  returns <- (x[(lag+1):n, ] - x[1:(n-lag),])/x[1:(n-lag),]
   returns <- as.data.frame(returns)
-  returns$Date <- dates[2:n]
+  returns$Date <- dates[(lag+1):n]
   returns
 }
+
+
+
