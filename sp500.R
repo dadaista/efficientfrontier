@@ -25,11 +25,11 @@ for (t in Tickers){
     s <- sd(rets)
     P=ecdf(rets) 
     
-    df$Return[df$Ticker==t] <- m
-    df$Volatility[df$Ticker==t] <- s
-    df$pGain2pc[df$Ticker==t] <- 1-P(0.02)
-    df$pLoss2pc[df$Ticker==t] <- P(-0.02)
-    })
+    df$Return[df$Ticker==t] <- round(m,2)
+    df$Volatility[df$Ticker==t] <- round(s,2)
+    df$pGain2pc[df$Ticker==t] <- round(1-P(0.02) , 2)
+    df$pLoss2pc[df$Ticker==t] <- round(P(-0.02) , 2)
+     })
   print(t)
   Sys.sleep(1)
 }
