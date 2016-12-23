@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd /home/docker/frontieR
 
 python2.7 -m SimpleHTTPServer 6161 &
 
