@@ -37,6 +37,11 @@ with open( sys.argv[ 1 ], 'rb') as csvfile:
 
 
 sys.stdout.write( "</table>" ) 
+import time
+sys.stdout.write( "<p>" ) 
+
+sys.stdout.write(time.strftime("%d/%m%/%Y %H:%M:%S"))
+sys.stdout.write( "</p>" ) 
 
 sys.stdout.write( "</body>" )
 sys.stdout.write( "</html>" )
