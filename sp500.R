@@ -43,7 +43,7 @@ top <-head( top[order(-top$pGain2pc),], 50 )
 top
 
 names(top) <- c("Ticker","Description","Return 10days",
-                "Volatility","2% profit prob","2% loss prob")
+                "Volatility","prob +2%","prob -2%")
 
 write.csv(top,"top.csv")
 
