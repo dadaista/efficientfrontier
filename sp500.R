@@ -34,7 +34,6 @@ for (t in Tickers){
   Sys.sleep(1)
 }
 
-df$sharpe <- df$Return / df$Volatility
 df <- df[complete.cases(df),]
 
 top <- df[df$Return>0,]
@@ -42,6 +41,9 @@ top <- df[df$Return>0,]
 top <- top[top$pLoss2pc<0.11,]#keep low loss risk only
 top <-head( top[order(-top$pGain2pc),], 50 )
 top
+
+names(top) <- c("Ticker","Description","Return 10days",
+                "Volatility","2% profit prob","2% loss prob")
 
 write.csv(top,"top.csv")
 
