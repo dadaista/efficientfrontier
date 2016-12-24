@@ -7,7 +7,7 @@ COUNTER=0
 while [  $COUNTER -lt 120 ]; do
  git pull
  Rscript sp500.R
- python2.7 csv2html.py top.csv > top.html
+ R -e 'rmarkdown::render("bestpicks.Rmd")'
  echo The counter is $COUNTER
  sleep 7200
  let COUNTER=COUNTER+1 
