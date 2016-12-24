@@ -1,0 +1,18 @@
+---
+title: "Best Picks"
+author: "Davide Carboni"
+---
+```{r, echo=FALSE}
+Sys.time()
+```
+
+Table below shows best securities listed in Standard & Poor in terms of buy&hold return over 10 days. It shows the probability to get a profit of 2%+ and the probability of a loss of -2%. 
+```{r, echo=FALSE}
+top <- read.csv("top.csv")
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+top
+```
