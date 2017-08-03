@@ -1,4 +1,4 @@
-#Beware
+# Beware
 Alas, it seems Yahoo discontinued its finance time series url API. That's so annoying and has an impact on a load of projects based on R and Matlab. We're searching an equivalent API free of charge to fix the issue. 
 
 # FrontieR
