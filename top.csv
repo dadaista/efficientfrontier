@@ -1,12 +1,25 @@
-"","Ticker","Security","Return","Volatility","pGain2pc","pLoss2pc","sharpe"
-"446","TMK","Torchmark Corp.",0.02,0.03,0.42,0.04,0.666666666666667
-"389","RSG","Republic Services Inc",0.01,0.02,0.38,0.07,0.5
-"382","DGX","Quest Diagnostics",0.01,0.03,0.37,0.1,0.333333333333333
-"334","NOC","Northrop Grumman Corp.",0.01,0.03,0.34,0.1,0.333333333333333
-"481","WM","Waste Management Inc.",0.01,0.03,0.33,0.1,0.333333333333333
-"277","L","Loews Corp.",0.01,0.02,0.31,0.08,0.5
-"165","EMC","EMC Corp.",0.01,0.02,0.29,0.01,0.5
-"24","ALL","Allstate Corp",0.01,0.02,0.27,0.07,0.5
-"68","BRK-B","Berkshire Hathaway",0.01,0.03,0.24,0.1,0.333333333333333
-"43","AON","Aon plc",0.01,0.02,0.22,0.08,0.5
-"63","BXLT","Baxalta",0.01,0.02,0.12,0,0.5
+"","Ticker","Description","Return 10days","Volatility","prob +2%","prob -2%","NA"
+"274","LNC","Lincoln National",0.04,0.07,0.56,0.09,1.04
+"363","PNC","PNC Financial Services",0.03,0.04,0.55,0.07,1.03
+"131","CSX","CSX Corp.",0.04,0.07,0.52,0.09,1.01
+"233","HBAN","Huntington Bancshares",0.03,0.05,0.5,0.1,1.04
+"374","PRU","Prudential Financial",0.03,0.04,0.5,0.06,1.04
+"47","AMAT","Applied Materials Inc",0.03,0.04,0.47,0.1,1
+"251","JPM","JPMorgan Chase & Co.",0.02,0.04,0.45,0.07,1.04
+"205","GD","General Dynamics",0.02,0.03,0.44,0.07,1.03
+"272","LUK","Leucadia National Corp.",0.02,0.04,0.44,0.1,1.05
+"455","USB","U.S. Bancorp",0.02,0.03,0.44,0.09,1.03
+"86","COF","Capital One Financial",0.02,0.05,0.42,0.1,1.03
+"127","GLW","Corning Inc.",0.02,0.03,0.42,0.07,1.04
+"65","BBT","BB&T Corporation",0.02,0.04,0.4,0.09,1.03
+"304","MSFT","Microsoft Corp.",0.02,0.03,0.39,0.06,1.01
+"40","APH","Amphenol Corp A",0.01,0.02,0.34,0.08,1.02
+"24","ALL","Allstate Corp",0.01,0.02,0.33,0.05,1.04
+"446","TMK","Torchmark Corp.",0.01,0.03,0.33,0.02,1.04
+"277","L","Loews Corp.",0.01,0.02,0.29,0.1,1.01
+"389","RSG","Republic Services Inc",0.01,0.02,0.28,0.07,1.02
+"68","BRK-B","Berkshire Hathaway",0.01,0.03,0.27,0.1,1.02
+"165","EMC","EMC Corp.",0.01,0.01,0.22,0.02,1.01
+"43","AON","Aon plc",0.01,0.02,0.21,0.07,1.03
+"275","LLTC","Linear Technology Corp.",0.02,0.06,0.21,0.05,1.02
+"371","PG","Procter & Gamble",0.01,0.02,0.19,0.09,1.03

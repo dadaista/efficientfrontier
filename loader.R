@@ -3,6 +3,7 @@ cache <- list()
 epoch <- function() as.integer(as.POSIXct(Sys.time()))
 lastReadTime <- epoch()
 library(lubridate)
+library(Quandl)
 
 as.date <- function(dateVector){
   year = dateVector[1]
@@ -12,46 +13,34 @@ as.date <- function(dateVector){
   month=c("01","02","03","04","05","06","07","08","09","10","11","12")[month]
   day=c("01","02","03","04","05","06","07","08","09",as.character(10:31))[day]
   d <- sprintf("%s-%s-%s",year,month,day)
+  d
 }
 
 
-buildYahooUrl<-function(tick,start,end){
-  
-  #aDate=strsplit(as.character(Sys.Date()),"-")[[1]]
-  #day=as.numeric(aDate[3])
-  #month=as.numeric(aDate[2])-1
-  #year=as.numeric(aDate[1])
-  
-  start.year=start[1]
-  start.month=start[2] - 1
-  start.day=start[3]
-  end.year=end[1]
-  end.month=end[2] - 1
-  end.day=end[3]
-  #u<- 'http://real-chart.finance.yahoo.com/table.csv?s=%5ENDX&a=09&b=11&c=2010&d=09&e=11&f=2015&g=d&ignore=.csv'
-  baseu<-'http://real-chart.finance.yahoo.com/table.csv?s='
-  u=sprintf("%s%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv",baseu,tick,start.month,start.day,start.year,end.month,end.day,end.year)
-  return (u)
-  
-}
 
+
+
+#' Title
+#'
+#' @param tick the symbol ex. "MSFT"
+#' @param start ex. c(2016,7,1)
+#' @param end   ditto
+#'
+#' @return a dataframe
 
 load<-function(tick,start, end){#sec
-  #Sys.sleep(1)#to prevent congestion
-  #special case
-  if(tick=="BTC"){
-    return(loadBTC(start,end))
-  }
+
   cache.key <- paste(tick,as.date(start),as.date(end))
   cache.miss <- !(cache.key %in% names(cache))
   
   if(USECACHE==FALSE) cache.miss <- TRUE
   
   if(cache.miss){
-    df<-read.csv(buildYahooUrl(tick,start,end))
+    df<-Quandl(paste(c("WIKI",tick),collapse = "/"),start_date=as.date(start),end_date=as.date(end))
     #keep only price and date columns
-    df <- df[,c("Date","Adj.Close")]
+    df <- df[,c("Date","Adj. Close")]
     df <- df[nrow(df):1,]
+    names(df) <- c("Date","Adj.Close")
     if(USECACHE) 
       cache[[cache.key]] <<- df
   }else df <- cache[[cache.key]]
@@ -63,24 +52,9 @@ load<-function(tick,start, end){#sec
 
 
 
-loadBTC<-function(start,end){
-  stop("BTC load not working yet!!!")
-  start <- as.date(start)
-  end <- as.date(end)
-  url = sprintf('https://api.coindesk.com/v1/bpi/historical/close.csv?start=%s&end=%s',start,end)
-  url
-  df<-read.csv(url)
-  #df[,1]<-as.character(as.Date(df[,1],format="%d/%m/%Y"))
-  
-  names(df) <- c("Date","Adj.Close")
-  df
-}
 
 
-
-
-
-
+#like load but with a vector of tickers
 loadMulti <- function(tickers,start,end,to.date=0){
   
   if(to.date>0){
